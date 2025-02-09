@@ -6,14 +6,15 @@ import { useForm, Controller } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import SimpleMDE from 'react-simplemde-editor';
 import axios from 'axios';
-import { error } from 'console';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { newIssueSchema } from '@/app/api/issues/validationSchemas';
 
-interface IssueForm  {
-  title: string,
-  description: string,
-}
+type IssueForm = z.infer<typeof newIssueSchema>;
 const NewIssue = () => {
-  const {register, control, handleSubmit} = useForm<IssueForm>();
+  const {register, control, handleSubmit, formState: {errors}} = useForm<IssueForm>({
+    resolver: zodResolver(newIssueSchema)
+  });
   const router = useRouter();
   const [err, setErro] = useState('');
   return (
@@ -30,11 +31,12 @@ const NewIssue = () => {
       }
     })}>
         <TextField.Root placeholder='text...' {...register('title')}/>
+        {errors.title&&<Text color='red' as='p'>{errors.title.message}</Text>}
         <Controller 
         name='description'
         control={control}
         render={({field})=><SimpleMDE placeholder='description...' {...field}/>}/>
-
+        {errors.description && <Text color='red' as='p'>{errors.description.message}</Text>}
         <Button>Create Issue</Button>
     </form>
         </div>
