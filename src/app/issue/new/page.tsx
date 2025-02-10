@@ -9,6 +9,7 @@ import axios from 'axios';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { newIssueSchema } from '@/app/api/issues/validationSchemas';
+import ErrorMessage from '@/app/components/ErrorMessage';
 
 type IssueForm = z.infer<typeof newIssueSchema>;
 const NewIssue = () => {
@@ -31,12 +32,14 @@ const NewIssue = () => {
       }
     })}>
         <TextField.Root placeholder='text...' {...register('title')}/>
-        {errors.title&&<Text color='red' as='p'>{errors.title.message}</Text>}
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
+
         <Controller 
         name='description'
         control={control}
         render={({field})=><SimpleMDE placeholder='description...' {...field}/>}/>
-        {errors.description && <Text color='red' as='p'>{errors.description.message}</Text>}
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
+        
         <Button>Create Issue</Button>
     </form>
         </div>
