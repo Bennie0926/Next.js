@@ -14,16 +14,17 @@ const NavBar = () => {
     {label:'Trouble Shoot', href:'/troubleshoot'},
     {label:'About Us', href:'/aboutus'},
   ];
-  const navigation = usePathname();
+  const currentPathname = usePathname();
+  console.log(currentPathname);
   const {status, data:session} = useSession();
   return (
-    <div>
+    <nav>
         <ul className={`flex space-x-6 border-b-2 items-center p-6`}>
           <Link href='/'>{<FaBug />}</Link>
           {lists.map((list) => (
             <li key={list.href}><Link href={list.href}  className={classNames({
-              'text-zinc-900' : list.href === navigation,
-              'text-zinc-500' : list.href !== navigation,
+              'text-zinc-900' : list.href === currentPathname,
+              'text-zinc-500' : list.href !== currentPathname,
               'hover:text-blue-500 transition-colors' : true
             })}>{list.label}</Link></li>
           ))}
@@ -32,7 +33,7 @@ const NavBar = () => {
           {status === "unauthenticated" && (<Link href='/api/auth/signin'>Log in</Link>)}
           </Box>
         </ul>
-    </div>
+    </nav>
   )
 }
 
